@@ -1,52 +1,35 @@
 const express = require('express');
-const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'data.json');
+const PORT = process.env.PORT || 3000; // Use Vercel's PORT env var or default to 3000
+let requests = []; // In-memory store for requests
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Initialize data file if it doesn't exist
-async function initializeData() {
-    try {
-        await fs.access(DATA_FILE);
-    } catch {
-        await fs.writeFile(DATA_FILE, JSON.stringify([]));
-    }
-}
-
 // Get all requests
-app.get('/api/requests', async (req, res) => {
-    const data = await fs.readFile(DATA_FILE, 'utf8');
-    res.json(JSON.parse(data));
+app.get('/api/requests', (req, res) => {
+    res.json(requests);
 });
 
 // Submit a new request
-app.post('/api/requests', async (req, res) => {
-    const data = await fs.readFile(DATA_FILE, 'utf8');
-    const requests = JSON.parse(data);
+app.post('/api/requests', (req, res) => {
     const newRequest = {
         id: Date.now().toString(), // Simple unique ID
         ...req.body
     };
     requests.push(newRequest);
-    await fs.writeFile(DATA_FILE, JSON.stringify(requests, null, 2));
     res.status(201).send('Request submitted');
 });
 
 // Respond to a request
-app.post('/api/requests/:id/respond', async (req, res) => {
-    const data = await fs.readFile(DATA_FILE, 'utf8');
-    const requests = JSON.parse(data);
+app.post('/api/requests/:id/respond', (req, res) => {
     const request = requests.find(r => r.id === req.params.id);
     if (request) {
         request.status = 'responded';
         request.response = req.body;
-        await fs.writeFile(DATA_FILE, JSON.stringify(requests, null, 2));
         res.send('Response submitted');
     } else {
         res.status(404).send('Request not found');
@@ -54,11 +37,6 @@ app.post('/api/requests/:id/respond', async (req, res) => {
 });
 
 // Start server
-async function startServer() {
-    await initializeData();
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
-    });
-}
-
-startServer();
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
