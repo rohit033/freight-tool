@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales - Freight Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sales Request Form</h1>
+        </div>
+        <form id="requestForm" class="dashboard-form">
+            <div class="form-group">
+                <label for="pol">POL (Port of Loading):</label>
+                <input type="text" id="pol" required>
+            </div>
+            <div class="form-group">
+                <label for="pod">POD (Port of Discharge):</label>
+                <input type="text" id="pod" required>
+            </div>
+            <div class="form-group">
+                <label for="container">Container Size/Type:</label>
+                <input type="text" id="container" required>
+            </div>
+            <div class="form-group">
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Cargo Weight (MT):</label>
+                <input type="number" id="weight" required>
+            </div>
+            <div class="form-group">
+                <label for="freeDays">Destination Free Days:</label>
+                <input type="number" id="freeDays" required>
+            </div>
+            <div class="form-group">
+                <label for="readyDate">Cargo Readiness:</label>
+                <input type="date" id="readyDate" required>
+            </div>
+            <div class="form-group">
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks"></textarea>
+            </div>
+            <button type="submit" class="btn">Submit Request</button>
+        </form>
+        <div class="button-group">
+            <a href="response.html" class="btn secondary-btn">View Responses</a>
+            <a href="index.html" class="btn back-btn">Back to Login</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('requestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const request = {
+                username: localStorage.getItem('username'),
+                pol: document.getElementById('pol').value,
+                pod: document.getElementById('pod').value,
+                container: document.getElementById('container').value,
+                cargo: document.getElementById('cargo').value,
+                weight: document.getElementById('weight').value,
+                freeDays: document.getElementById('freeDays').value,
+                readyDate: document.getElementById('readyDate').value,
+                remarks: document.getElementById('remarks').value,
+                status: 'pending'
+            };
+            await fetch('/api/requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(request)
+            });
+            alert('Request submitted!');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pricing - Freight Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pricing Dashboard</h1>
+            <a href="index.html" class="btn back-btn">Back to Login</a>
+        </div>
+        <div id="requests"></div>
+    </div>
+    <script>
+        async function loadRequests() {
+            const response = await fetch('/api/requests');
+            const requests = await response.json();
+            const requestsDiv = document.getElementById('requests');
+            requestsDiv.innerHTML = '';
+            requests.filter(r => r.status === 'pending').forEach(req => {
+                const div = document.createElement('div');
+                div.className = 'request';
+                div.innerHTML = `
+                    <h3>${req.username}: ${req.pol} to ${req.pod}</h3>
+                    <table class="details-table">
+                        <tr><th>Container</th><td>${req.container}</td></tr>
+                        <tr><th>Cargo</th><td>${req.cargo}</td></tr>
+                        <tr><th>Weight</th><td>${req.weight} MT</td></tr>
+                        <tr><th>Free Days</th><td>${req.freeDays}</td></tr>
+                        <tr><th>Ready Date</th><td>${req.readyDate}</td></tr>
+                        <tr><th>Remarks</th><td>${req.remarks || 'None'}</td></tr>
+                    </table>
+                    <form class="dashboard-form responseForm" data-id="${req.id}">
+                        <div class="form-group">
+                            <label>Ocean Freight ($):</label>
+                            <input type="number" name="freight" required>
+                        </div>
+                        <div class="form-group">
+                            <label>POL Charges ($):</label>
+                            <input type="number" name="polCharges" required>
+                        </div>
+                        <div class="form-group">
+                            <label>POD Charges ($):</label>
+                            <input type="number" name="podCharges" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Vessel:</label>
+                            <input type="text" name="vessel" required>
+                        </div>
+                        <button type="submit" class="btn">Submit Response</button>
+                    </form>
+                `;
+                requestsDiv.appendChild(div);
+            });
+
+            document.querySelectorAll('.responseForm').forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const id = form.dataset.id;
+                    const response = {
+                        freight: form.querySelector('[name="freight"]').value,
+                        polCharges: form.querySelector('[name="polCharges"]').value,
+                        podCharges: form.querySelector('[name="podCharges"]').value,
+                        vessel: form.querySelector('[name="vessel"]').value
+                    };
+                    await fetch(`/api/requests/${id}/respond`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(response)
+                    });
+                    loadRequests();
+                });
+            });
+        }
+        loadRequests();
+    </script>
+</body>
+</html>

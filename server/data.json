@@ -1,0 +1,53 @@
+[
+  {
+    "id": "1742727555611",
+    "username": "salesperson_1",
+    "pol": "Mundra",
+    "pod": "Jebel Ali",
+    "container": "20'GP",
+    "cargo": "Refractories items",
+    "weight": "13",
+    "freeDays": "7",
+    "readyDate": "2025-03-29",
+    "remarks": "Customer need earlier vessel",
+    "status": "pending"
+  },
+  {
+    "id": "1742727677015",
+    "username": "salesperson_2",
+    "pol": "Delhi",
+    "pod": " Alu dabi",
+    "container": "26'GP",
+    "cargo": "Refractories items lots",
+    "weight": "5",
+    "freeDays": "6",
+    "readyDate": "2025-03-28",
+    "remarks": "Great",
+    "status": "responded",
+    "response": {
+      "freight": "5",
+      "polCharges": "120",
+      "podCharges": "100",
+      "vessel": "x-press altaier/25004"
+    }
+  },
+  {
+    "id": "1742729210476",
+    "username": "salesperson_3",
+    "pol": "Mundra",
+    "pod": " Alu dabi",
+    "container": "26'GP",
+    "cargo": "Refractories items",
+    "weight": "10",
+    "freeDays": "8",
+    "readyDate": "2025-03-27",
+    "remarks": "Good",
+    "status": "responded",
+    "response": {
+      "freight": "10",
+      "polCharges": "120",
+      "podCharges": "70",
+      "vessel": "Bad"
+    }
+  }
+]

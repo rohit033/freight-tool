@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Freight Tool - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Welcome to Freight Tool</h1>
+            <p class="subtitle">Sign in to manage your shipping needs</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="sales">Sales</option>
+                        <option value="pricing">Pricing</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const role = document.getElementById('role').value;
+            localStorage.setItem('username', username);
+            localStorage.setItem('role', role);
+            window.location.href = role === 'sales' ? 'sales.html' : 'pricing.html';
+        });
+    </script>
+</body>
+</html>

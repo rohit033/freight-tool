@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Responses - Freight Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Responses</h1>
+            <a href="sales.html" class="btn back-btn">Back to Request Form</a>
+        </div>
+        <div id="responses"></div>
+    </div>
+    <script>
+        async function loadResponses() {
+            const username = localStorage.getItem('username');
+            const response = await fetch('/api/requests');
+            const requests = await response.json();
+            const responsesDiv = document.getElementById('responses');
+            responsesDiv.innerHTML = '';
+            requests.filter(r => r.username === username && r.status === 'responded').forEach(req => {
+                const div = document.createElement('div');
+                div.className = 'response';
+                div.innerHTML = `
+                    <h3>${req.pol} to ${req.pod}</h3>
+                    <table class="details-table">
+                        <tr><th>Ocean Freight</th><td>$${req.response.freight}</td></tr>
+                        <tr><th>POL Charges</th><td>$${req.response.polCharges}</td></tr>
+                        <tr><th>POD Charges</th><td>$${req.response.podCharges}</td></tr>
+                        <tr><th>Vessel</th><td>${req.response.vessel}</td></tr>
+                    </table>
+                `;
+                responsesDiv.appendChild(div);
+            });
+        }
+        loadResponses();
+    </script>
+</body>
+</html>
